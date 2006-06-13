@@ -1,0 +1,20 @@
+---
+name: Catalyst-Plugin-FormValidator-Simple-Auto
+version: 0.01
+author:
+  - 'Daisuke Murase <typester@cpan.org>'
+abstract: Smart validation with FormValidator::Simple
+license: perl
+resources:
+  license: http://dev.perl.org/licenses/
+requires:
+  Catalyst: 5.30
+  Catalyst::Plugin::FormValidator::Simple: 0
+provides:
+  Catalyst::Plugin::FormValidator::Simple::Auto:
+    file: lib/Catalyst/Plugin/FormValidator/Simple/Auto.pm
+    version: 0.01
+generated_by: Module::Build version 0.2801
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2

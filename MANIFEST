@@ -1,0 +1,12 @@
+MANIFEST
+README
+LICENSE
+Todo
+Changes
+t/pod-coverage.t
+t/pod.t
+Build.PL
+Makefile.PL
+lib/Catalyst/Plugin/FormValidator/Simple/Auto.pm
+t/01_load.t
+META.yml

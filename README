@@ -1,0 +1,59 @@
+NAME
+    Catalyst::Plugin::FormValidator::Simple::Auto - Smart validation with
+    FormValidator::Simple
+
+SYNOPSIS
+        use Catalyst qw/
+          FormValidator::Simple
+          FormValidator::Simple::Auto
+          /;
+    
+        __PACKAGE__->config(
+            validator => {
+                messages => 'messages.yml',
+                profiles => 'profiles.yml',
+                # and other FormValidator::Simple config
+            },
+        );
+    
+        # profiles.yml
+        action1:
+          param1:
+            - NOT_BLANK
+            - ASCII
+            - [ 'LENGTH', 4, 10 ]
+          param2:
+            - NOT_BLANK
+    
+        # then your action
+        sub action1 : Global {
+            my ($self, $c) = @_;
+    
+            # $c->form($profile) already executed!
+            unless ($c->form->has_error) {
+                ...
+            }
+        }
+
+DESCRIPTION
+    This plugin provide auto validation to Plugin::FormValidator::Simple.
+
+    You can define validation profiles into config or YAML file, and no
+    longer have to write it in actions.
+
+EXTENDED METHODS
+  setup
+  prepare
+ORIGINAL IDEA
+    Daisuke Maki <dmaki@cpan.org>
+
+AUTHOR
+    Daisuke Murase <typester@cpan.org>
+
+COPYRIGHT
+    This program is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
+    The full text of the license can be found in the LICENSE file included
+    with this module.
+
