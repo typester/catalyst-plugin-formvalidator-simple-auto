@@ -6,7 +6,7 @@ use Catalyst::Exception;
 use UNIVERSAL::isa;
 use YAML;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 NAME
 
