@@ -1,5 +1,8 @@
 Revision history for Perl module Catalyst::Plugin::FormValidator::Simple::Auto
 
+0.03 2006-06-14T11:30:20+09:00
+     - fixed bug for action name (reported by tokuhirom)
+
 0.02 2006-06-14T02:08:49+09:00
      - added missing prereq modules (no code changes)
 

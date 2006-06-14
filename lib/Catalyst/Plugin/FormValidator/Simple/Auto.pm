@@ -6,7 +6,7 @@ use Catalyst::Exception;
 use UNIVERSAL::isa;
 use YAML;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 =head1 NAME
 
@@ -97,7 +97,7 @@ sub setup {
 sub prepare {
     my $c = shift->NEXT::prepare(@_);
 
-    if ( my $profile = $c->config->{validator}{profiles}{ $c->action->name } ) {
+    if ( my $profile = $c->config->{validator}{profiles}{ $c->action->reverse } ) {
         $c->form(%$profile);
     }
 
