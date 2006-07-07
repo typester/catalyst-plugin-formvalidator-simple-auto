@@ -6,7 +6,7 @@ use Catalyst::Exception;
 use UNIVERSAL::isa;
 use YAML;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 =head1 NAME
 
@@ -73,7 +73,8 @@ sub setup {
 
     if ( ref $c->config->{validator}->{profiles} ne 'HASH' ) {
         my $profiles = eval {
-            YAML::LoadFile( $c->path_to( $c->config->{validator}->{profiles} ) );
+            YAML::LoadFile(
+                $c->path_to( $c->config->{validator}->{profiles} )->stringify );
         };
         Catalyst::Exception->throw( message => __PACKAGE__ . qq/: $@/ ) if $@;
 

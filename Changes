@@ -1,5 +1,8 @@
 Revision history for Perl module Catalyst::Plugin::FormValidator::Simple::Auto
 
+0.04 2006-07-07T11:56:59+09:00
+     - fixed yaml load error with latest YAML.pm
+
 0.03 2006-06-14T11:30:20+09:00
      - fixed bug for action name (reported by tokuhirom)
 
