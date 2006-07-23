@@ -1,5 +1,8 @@
 Revision history for Perl module Catalyst::Plugin::FormValidator::Simple::Auto
 
+0.06 2006-07-24T02:44:21+09:00
+     - fixed forward action tracker bug when action is relative calls
+
 0.05 2006-07-24T01:48:38+09:00
      - added forward tracking
 
