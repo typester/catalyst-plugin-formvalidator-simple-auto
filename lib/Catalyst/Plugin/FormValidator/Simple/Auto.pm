@@ -1,12 +1,15 @@
 package Catalyst::Plugin::FormValidator::Simple::Auto;
 use strict;
 use warnings;
+use base qw/Class::Accessor::Fast/;
 
 use Catalyst::Exception;
 use UNIVERSAL::isa;
 use YAML;
 
 our $VERSION = '0.06';
+
+__PACKAGE__->mk_accessors(qw/validator_profile/);
 
 =head1 NAME
 
@@ -99,6 +102,7 @@ sub prepare {
     my $c = shift->NEXT::prepare(@_);
 
     if ( my $profile = $c->config->{validator}{profiles}{ $c->action->reverse } ) {
+        $c->validator_profile( $c->action->reverse );
         $c->form(%$profile);
     }
 
@@ -114,6 +118,7 @@ sub forward {
     my $action = $c->dispatcher->_invoke_as_path($c, @_);
 
     if ( my $profile = $c->config->{validator}{profiles}{ $action } ) {
+        $c->validator_profile($action);
         $c->form(%$profile);
     }
 
