@@ -6,7 +6,7 @@ use Catalyst::Exception;
 use UNIVERSAL::isa;
 use YAML;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 =head1 NAME
 
@@ -111,7 +111,7 @@ sub prepare {
 
 sub forward {
     my $c = shift;
-    my $action = $_[0];
+    my $action = $c->dispatcher->_invoke_as_path($c, @_);
 
     if ( my $profile = $c->config->{validator}{profiles}{ $action } ) {
         $c->form(%$profile);
