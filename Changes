@@ -1,5 +1,8 @@
 Revision history for Perl module Catalyst::Plugin::FormValidator::Simple::Auto
 
+0.05 2006-07-24T01:48:38+09:00
+     - added forward tracking
+
 0.04 2006-07-07T11:56:59+09:00
      - fixed yaml load error with latest YAML.pm
 

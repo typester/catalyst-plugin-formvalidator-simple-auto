@@ -7,16 +7,17 @@ SYNOPSIS
           FormValidator::Simple
           FormValidator::Simple::Auto
           /;
-    
-        __PACKAGE__->config(
+        
+    __PACKAGE__->config(
             validator => {
                 messages => 'messages.yml',
                 profiles => 'profiles.yml',
                 # and other FormValidator::Simple config
             },
         );
+        
     
-        # profiles.yml
+    # profiles.yml
         action1:
           param1:
             - NOT_BLANK
@@ -24,12 +25,13 @@ SYNOPSIS
             - [ 'LENGTH', 4, 10 ]
           param2:
             - NOT_BLANK
+        
     
-        # then your action
+    # then your action
         sub action1 : Global {
             my ($self, $c) = @_;
-    
-            # $c->form($profile) already executed!
+        
+        # $c->form($profile) already executed!
             unless ($c->form->has_error) {
                 ...
             }
@@ -44,6 +46,7 @@ DESCRIPTION
 EXTENDED METHODS
   setup
   prepare
+  forward
 ORIGINAL IDEA
     Daisuke Maki <dmaki@cpan.org>
 

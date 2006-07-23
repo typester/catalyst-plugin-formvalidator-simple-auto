@@ -6,7 +6,7 @@ use Catalyst::Exception;
 use UNIVERSAL::isa;
 use YAML;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 =head1 NAME
 
@@ -103,6 +103,22 @@ sub prepare {
     }
 
     $c
+}
+
+=head2 forward
+
+=cut
+
+sub forward {
+    my $c = shift;
+    my $action = $_[0];
+
+    if ( my $profile = $c->config->{validator}{profiles}{ $action } ) {
+        $c->form(%$profile);
+    }
+
+    local $NEXT::NEXT{ $c, 'forward' };
+    $c->NEXT::forward(@_);
 }
 
 =head1 ORIGINAL IDEA
