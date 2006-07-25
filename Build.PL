@@ -1,4 +1,5 @@
 use Module::Build;
+
 # See perldoc Module::Build for details of how this works
 
 Module::Build->new(
@@ -10,4 +11,5 @@ Module::Build->new(
         'UNIVERSAL::isa'                          => 0,
         'YAML'                                    => 0,
     },
+    build_requires => { 'HTTP::Request::Common' => 0, },
 )->create_build_script;
