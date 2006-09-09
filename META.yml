@@ -1,6 +1,6 @@
 ---
 name: Catalyst-Plugin-FormValidator-Simple-Auto
-version: 0.07
+version: 0.08
 author:
   - 'Daisuke Murase <typester@cpan.org>'
 abstract: Smart validation with FormValidator::Simple
@@ -17,8 +17,8 @@ build_requires:
 provides:
   Catalyst::Plugin::FormValidator::Simple::Auto:
     file: lib/Catalyst/Plugin/FormValidator/Simple/Auto.pm
-    version: 0.07
-generated_by: Module::Build version 0.2801
+    version: 0.08
+generated_by: Module::Build version 0.2805
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
   version: 1.2

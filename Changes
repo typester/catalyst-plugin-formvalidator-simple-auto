@@ -1,5 +1,8 @@
 Revision history for Perl module Catalyst::Plugin::FormValidator::Simple::Auto
 
+0.08 2006-09-09T15:16:29+09:00
+     - removed $c->path_to when loading yaml file
+
 0.07 2006-07-25T13:05:01+09:00
      - added validator_profile accessor to store current profile
      - added some basic tests
