@@ -104,11 +104,10 @@ sub setup {
           __PACKAGE__ . qq/: You need to load "Catalyst::Plugin::FormValidator::Simple"/ )
       unless $c->isa('Catalyst::Plugin::FormValidator::Simple');
 
-    Catalyst::Exception->throw(
-        message => __PACKAGE__ . qq/: You must set validator profiles/ )
+    $c->log->warn( __PACKAGE__ . qq/: You must set validator profiles/ )
       unless $config->{profiles};
 
-    if ( ref $config->{profiles} ne 'HASH' ) {
+    if ( $config->{profiles} and ref $config->{profiles} ne 'HASH' ) {
         my $profiles = eval {
             YAML::LoadFile( $config->{profiles} );
         };
