@@ -7,7 +7,7 @@ use Catalyst::Exception;
 use UNIVERSAL::isa;
 use YAML;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09_01';
 
 __PACKAGE__->mk_accessors(qw/validator_profile/);
 
@@ -17,20 +17,24 @@ Catalyst::Plugin::FormValidator::Simple::Auto - Smart validation with FormValida
 
 =head1 SYNOPSIS
 
+Loading:
+
     use Catalyst qw/
+      ConfigLoader
       FormValidator::Simple
       FormValidator::Simple::Auto
       /;
-    
-    __PACKAGE__->config(
-        validator => {
-            messages => 'messages.yml',
-            profiles => 'profiles.yml',
-            # and other FormValidator::Simple config
-        },
-    );
-    
-    
+
+myapp.yml:
+
+    validator:
+      profiles: __path_to(profiles.yml)__
+      messages: __path_to(messages.yml)__
+      message_format: <span class="error">%s</span>
+      # and other FormValidator::Simple config
+
+profiles.yml:
+
     # profiles.yml
     action1:
       param1:
@@ -39,9 +43,9 @@ Catalyst::Plugin::FormValidator::Simple::Auto - Smart validation with FormValida
         - [ 'LENGTH', 4, 10 ]
       param2:
         - NOT_BLANK
-    
-    
-    # then your action
+
+Then, using in your action:
+
     sub action1 : Global {
         my ($self, $c) = @_;
     
@@ -57,6 +61,35 @@ This plugin provide auto validation to Plugin::FormValidator::Simple.
 
 You can define validation profiles into config or YAML file, and no longer have to write it in actions.
 
+=head1 BUNDLING ERROR MESSAGES
+
+With 0.08 or earlier version, you need define validator profiles and error messages in separately.
+
+So, you had to write two settings like this:
+
+    # profiles.yml
+    action1:
+      param1:
+        - NOT_BLANK
+    
+    # messages.yml
+    action1:
+      param1:
+        NOT_BLANK: param1 is required!
+
+It's bothered!
+
+Since 0.09, you can place error messages in profiles config.
+
+Above two configs is equals to:
+
+    # profiles.yml
+    action1:
+      param1:
+        - rule: NOT_BLANK
+        - message: param1 is required!
+
+
 =head1 EXTENDED METHODS
 
 =head2 setup
@@ -65,6 +98,7 @@ You can define validation profiles into config or YAML file, and no longer have 
 
 sub setup {
     my $c = shift;
+    my $config = $c->config->{validator};
 
     Catalyst::Exception->throw( message =>
           __PACKAGE__ . qq/: You need to load "Catalyst::Plugin::FormValidator::Simple"/ )
@@ -72,16 +106,39 @@ sub setup {
 
     Catalyst::Exception->throw(
         message => __PACKAGE__ . qq/: You must set validator profiles/ )
-      unless $c->config->{validator}->{profiles};
+      unless $config->{profiles};
 
-    if ( ref $c->config->{validator}->{profiles} ne 'HASH' ) {
+    if ( ref $config->{profiles} ne 'HASH' ) {
         my $profiles = eval {
-            YAML::LoadFile( $c->config->{validator}->{profiles} );
+            YAML::LoadFile( $config->{profiles} );
         };
         Catalyst::Exception->throw( message => __PACKAGE__ . qq/: $@/ ) if $@;
 
-        $c->config->{validator}->{profiles} = $profiles;
+        $config->{profiles} = $profiles;
     }
+
+    my $messages;
+    my $profiles = $config->{profiles};
+    for my $action ( keys %{ $profiles || {} } ) {
+        my $profile = $profiles->{$action} || {};
+
+        for my $param ( keys %$profile ) {
+            my $rules = $profile->{$param} || [];
+
+            for my $rule (@$rules) {
+
+                if ( ref $rule eq 'HASH'
+                    and defined $rule->{rule} && defined $rule->{message} )
+                {
+                    $messages->{$action}{$param}{ $rule->{rule} } = $rule->{message};
+                    $rule = $rule->{rule};
+                }
+            }
+        }
+    }
+
+    # XXX: replace messages. ponder about hash merging
+    $config->{messages} = $messages if $messages;
 
     # fix plugin order
     {

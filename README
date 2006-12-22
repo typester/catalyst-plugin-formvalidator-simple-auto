@@ -3,21 +3,25 @@ NAME
     FormValidator::Simple
 
 SYNOPSIS
+    Loading:
+
         use Catalyst qw/
+          ConfigLoader
           FormValidator::Simple
           FormValidator::Simple::Auto
           /;
-        
-    __PACKAGE__->config(
-            validator => {
-                messages => 'messages.yml',
-                profiles => 'profiles.yml',
-                # and other FormValidator::Simple config
-            },
-        );
-        
-    
-    # profiles.yml
+
+    myapp.yml:
+
+        validator:
+          profiles: __path_to(profiles.yml)__
+          messages: __path_to(messages.yml)__
+          message_format: <span class="error">%s</span>
+          # and other FormValidator::Simple config
+
+    profiles.yml:
+
+        # profiles.yml
         action1:
           param1:
             - NOT_BLANK
@@ -25,9 +29,9 @@ SYNOPSIS
             - [ 'LENGTH', 4, 10 ]
           param2:
             - NOT_BLANK
-        
-    
-    # then your action
+
+    Then, using in your action:
+
         sub action1 : Global {
             my ($self, $c) = @_;
         
@@ -42,6 +46,34 @@ DESCRIPTION
 
     You can define validation profiles into config or YAML file, and no
     longer have to write it in actions.
+
+BUNDLING ERROR MESSAGES
+    With 0.08 or earlier version, you need define validator profiles and
+    error messages in separately.
+
+    So, you had to write two settings like this:
+
+        # profiles.yml
+        action1:
+          param1:
+            - NOT_BLANK
+        
+    # messages.yml
+        action1:
+          param1:
+            NOT_BLANK: param1 is required!
+
+    It's bothered!
+
+    Since 0.09, you can place error messages in profiles config.
+
+    Above two configs is equals to:
+
+        # profiles.yml
+        action1:
+          param1:
+            - rule: NOT_BLANK
+            - message: param1 is required!
 
 EXTENDED METHODS
   setup
