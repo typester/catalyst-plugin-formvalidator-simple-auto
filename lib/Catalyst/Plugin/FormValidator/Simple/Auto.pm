@@ -7,7 +7,7 @@ use Catalyst::Exception;
 use UNIVERSAL::isa;
 use YAML;
 
-our $VERSION = '0.09_01';
+our $VERSION = '0.09';
 
 __PACKAGE__->mk_accessors(qw/validator_profile/);
 

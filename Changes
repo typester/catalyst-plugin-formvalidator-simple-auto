@@ -1,5 +1,10 @@
 Revision history for Perl module Catalyst::Plugin::FormValidator::Simple::Auto
 
+0.09 2006-12-23T08:58:04+09:00
+     - Use warn instead of error, when no validator profile set
+     - Switched to Module::Install
+     - Added validation error message bundling feature
+
 0.08 2006-09-09T15:16:29+09:00
      - removed $c->path_to when loading yaml file
 
