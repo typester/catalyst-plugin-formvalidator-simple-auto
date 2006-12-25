@@ -71,11 +71,15 @@ So, you had to write two settings like this:
     action1:
       param1:
         - NOT_BLANK
+      param2:
+        - ASCII
     
     # messages.yml
     action1:
       param1:
-        NOT_BLANK: param1 is required!
+        NOT_BLANK: param1 is required
+      param2:
+        ASCII: param1 is 
 
 It's bothered!
 
@@ -87,7 +91,7 @@ Above two configs is equals to:
     action1:
       param1:
         - rule: NOT_BLANK
-        - message: param1 is required!
+          message: param1 is required!
 
 
 =head1 EXTENDED METHODS
@@ -125,11 +129,9 @@ sub setup {
             my $rules = $profile->{$param} || [];
 
             for my $rule (@$rules) {
-
-                if ( ref $rule eq 'HASH'
-                    and defined $rule->{rule} && defined $rule->{message} )
-                {
-                    $messages->{$action}{$param}{ $rule->{rule} } = $rule->{message};
+                if ( ref $rule eq 'HASH' and defined $rule->{rule} ) {
+                    $messages->{$action}{$param} ||= {};
+                    $messages->{$action}{$param}{ $rule->{rule} } = $rule->{message} if defined $rule->{message};
                     $rule = $rule->{rule};
                 }
             }
