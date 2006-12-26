@@ -7,7 +7,7 @@ use Catalyst::Exception;
 use UNIVERSAL::isa;
 use YAML;
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 __PACKAGE__->mk_accessors(qw/validator_profile/);
 
@@ -71,15 +71,11 @@ So, you had to write two settings like this:
     action1:
       param1:
         - NOT_BLANK
-      param2:
-        - ASCII
     
     # messages.yml
     action1:
       param1:
-        NOT_BLANK: param1 is required
-      param2:
-        ASCII: param1 is 
+        NOT_BLANK: param1 is required!
 
 It's bothered!
 

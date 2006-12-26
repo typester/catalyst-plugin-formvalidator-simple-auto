@@ -73,7 +73,7 @@ BUNDLING ERROR MESSAGES
         action1:
           param1:
             - rule: NOT_BLANK
-            - message: param1 is required!
+              message: param1 is required!
 
 EXTENDED METHODS
   setup
