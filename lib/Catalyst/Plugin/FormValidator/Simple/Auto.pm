@@ -6,8 +6,9 @@ use base qw/Class::Accessor::Fast/;
 use Catalyst::Exception;
 use UNIVERSAL::isa;
 use YAML;
+use FormValidator::Simple;
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 __PACKAGE__->mk_accessors(qw/validator_profile/);
 
@@ -89,6 +90,28 @@ Above two configs is equals to:
         - rule: NOT_BLANK
           message: param1 is required!
 
+=head1 METHODS
+
+=head2 validator_profile
+
+An accessor for current profile name
+
+=head2 form_messages
+
+=head2 form_messages( 'key' );
+
+Return error messages about current validator profile.
+
+If the key isn't presented, return all messages as hash.
+
+=cut
+
+sub form_messages {
+    my ($c, $key) = @_;
+    my $messages = $c->form->field_messages( $c->validator_profile );
+
+    $key ? $messages->{$key} : $messages;
+}
 
 =head1 EXTENDED METHODS
 
@@ -171,13 +194,22 @@ sub forward {
     my $c = shift;
     my $action = $c->dispatcher->_invoke_as_path($c, @_);
 
+    local $NEXT::NEXT{ $c, 'forward' };
+
+    my $res;
     if ( my $profile = $c->config->{validator}{profiles}{ $action } ) {
-        $c->validator_profile($action);
+        # We only need to create a new validator if there is a new profile
+        local $c->{validator} = FormValidator::Simple->new;
+        local $c->{validator_profile} = $action;
+
         $c->form(%$profile);
+        $res = $c->NEXT::forward(@_);
+    }
+    else {
+        $res = $c->NEXT::forward(@_);
     }
 
-    local $NEXT::NEXT{ $c, 'forward' };
-    $c->NEXT::forward(@_);
+    $res;
 }
 
 =head1 ORIGINAL IDEA

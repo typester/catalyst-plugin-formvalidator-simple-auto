@@ -75,6 +75,16 @@ BUNDLING ERROR MESSAGES
             - rule: NOT_BLANK
               message: param1 is required!
 
+METHODS
+  validator_profile
+    An accessor for current profile name
+
+  form_messages
+  form_messages( 'key' );
+    Return error messages about current validator profile.
+
+    If the key isn't presented, return all messages as hash.
+
 EXTENDED METHODS
   setup
   prepare
