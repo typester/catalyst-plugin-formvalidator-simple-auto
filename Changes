@@ -1,8 +1,7 @@
 Revision history for Perl module Catalyst::Plugin::FormValidator::Simple::Auto
 
 0.02 2007-02-22T17:14:20+09:00
-	 - Added nest forward validation
-	   (Thanks to Daniel Burke <daniel.burke@gaiax.com>)
+	 - Added nest forward validation (Thanks to Daniel Burke)
 	 - Added form_messages method
 
 0.11 2007-01-02T02:56:00+09:00
