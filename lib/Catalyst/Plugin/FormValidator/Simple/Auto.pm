@@ -7,7 +7,7 @@ use Catalyst::Exception;
 use UNIVERSAL::isa;
 use YAML;
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 __PACKAGE__->mk_accessors(qw/validator_profile/);
 
@@ -126,8 +126,9 @@ sub setup {
 
             for my $rule (@$rules) {
                 if ( ref $rule eq 'HASH' and defined $rule->{rule} ) {
+                    my $rule_name = ref $rule->{rule} eq 'ARRAY' ? $rule->{rule}[0] : $rule->{rule};
                     $messages->{$action}{$param} ||= {};
-                    $messages->{$action}{$param}{ $rule->{rule} } = $rule->{message} if defined $rule->{message};
+                    $messages->{$action}{$param}{ $rule_name } = $rule->{message} if defined $rule->{message};
                     $rule = $rule->{rule};
                 }
             }
