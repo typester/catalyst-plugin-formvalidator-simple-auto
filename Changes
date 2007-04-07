@@ -1,5 +1,8 @@
 Revision history for Perl module Catalyst::Plugin::FormValidator::Simple::Auto
 
+0.14 2007-04-08T02:46:50+09:00
+     - don't delete not only profile action but also form object, too
+
 0.13 2007-04-08T02:03:57+09:00
      - don't delete profile if it's first one
 
