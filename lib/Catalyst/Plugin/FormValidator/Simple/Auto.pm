@@ -198,15 +198,21 @@ sub forward {
 
     my $res;
     if ( my $profile = $c->config->{validator}{profiles}{ $action } ) {
-        # We only need to create a new validator if there is a new profile
-        {
+        # first time validation
+        if (not $c->validator_profile) {
+            $c->{validator_profile} = $action;
+
+            $c->form(%$profile);
+            $res = $c->NEXT::forward(@_);
+        }
+        else {
+            # don't override validator stuffs when not first time validation
             local $c->{validator} = FormValidator::Simple->new;
             local $c->{validator_profile} = $action;
 
             $c->form(%$profile);
             $res = $c->NEXT::forward(@_);
         }
-        $c->{validator_profile} ||= $action; # don't delete profile if it's first one
     }
     else {
         $res = $c->NEXT::forward(@_);
