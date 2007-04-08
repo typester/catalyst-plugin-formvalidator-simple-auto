@@ -22,6 +22,9 @@ use warnings;
                     ],
                 },
                 action2_submit => { param1 => [ 'NOT_BLANK', 'ASCII' ], },
+                action3        => {
+                    param1 => [ { _rule => 'SELF', message => 'SELF!!', }, ],
+                },
             },
         },
     );
@@ -59,12 +62,19 @@ use warnings;
             $c->res->body('no errors');
         }
     }
+
+    sub action3 :Global {
+        my ($self, $c) = @_;
+
+        $c->set_invalid_form( param1 => 'SELF' );
+        $c->res->body( $c->form_messages('param1')->[0] );
+    }
 }
 
 use Catalyst::Test 'TestApp';
 use Test::Base;
 
-plan tests => 14;
+plan tests => 15;
 
 use HTTP::Request::Common;
 
@@ -92,3 +102,6 @@ is( $res->content, 'no errors', 'is no errors');
 ok( $res = request('/action2'), 'request ok' );
 is( $res->content, 'no $c->form executed', 'is no $c->form executed');
 
+
+# bundle message that not validation rule
+is( get('/action3'), 'SELF!!', 'self message ok');

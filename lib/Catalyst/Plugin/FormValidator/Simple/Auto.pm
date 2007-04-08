@@ -154,6 +154,11 @@ sub setup {
                     $messages->{$action}{$param}{ $rule_name } = $rule->{message} if defined $rule->{message};
                     $rule = $rule->{rule};
                 }
+                elsif (ref $rule eq 'HASH' and defined $rule->{_rule} ) {
+                    $messages->{$action}{$param} ||= {};
+                    $messages->{$action}{$param}{ $rule->{_rule} } = $rule->{message} if defined $rule->{message};
+                    undef $rule;
+                }
             }
         }
     }
