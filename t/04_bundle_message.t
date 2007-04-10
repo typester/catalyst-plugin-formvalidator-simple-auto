@@ -23,7 +23,7 @@ use warnings;
                 },
                 action2_submit => { param1 => [ 'NOT_BLANK', 'ASCII' ], },
                 action3        => {
-                    param1 => [ { _rule => 'SELF', message => 'SELF!!', }, ],
+                    param1 => [ { self_rule => 'SELF', message => 'SELF!!', }, ],
                 },
             },
         },
@@ -104,4 +104,4 @@ is( $res->content, 'no $c->form executed', 'is no $c->form executed');
 
 
 # bundle message that not validation rule
-is( get('/action3'), 'SELF!!', 'self message ok');
+is( get('/action3'), 'SELF!!', 'self ruled message ok');
