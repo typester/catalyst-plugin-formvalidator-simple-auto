@@ -1,5 +1,8 @@
 Revision history for Perl module Catalyst::Plugin::FormValidator::Simple::Auto
 
+0.15 2007-04-10T10:56:52+09:00
+     - support bundle message that has no validation rule
+
 0.14 2007-04-08T02:46:50+09:00
      - don't delete not only profile action but also form object, too
 
