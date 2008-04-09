@@ -201,6 +201,7 @@ sub forward {
     my $c = shift;
     my $action = $c->dispatcher->_invoke_as_path($c, @_);
 
+    no warnings 'once';
     local $NEXT::NEXT{ $c, 'forward' };
 
     my $res;
