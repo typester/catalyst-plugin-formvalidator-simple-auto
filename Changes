@@ -1,5 +1,8 @@
 Revision history for Perl module Catalyst::Plugin::FormValidator::Simple::Auto
 
+0.16 2008-04-09T16:24:45+09:00
+     - support yaml aliases (Reported by Nakane)
+
 0.15 2007-04-10T10:56:52+09:00
      - support bundle message that has no validation rule
 

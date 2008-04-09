@@ -8,7 +8,7 @@ use UNIVERSAL::isa;
 use YAML;
 use FormValidator::Simple;
 
-our $VERSION = '0.15';
+our $VERSION = '0.16';
 
 __PACKAGE__->mk_accessors(qw/validator_profile/);
 

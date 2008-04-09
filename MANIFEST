@@ -27,6 +27,8 @@ t/03_store_profile.t
 t/04_bundle_message.t
 t/05_form_messages.t
 t/06_nested_actions.t
+t/07_alias.t
+t/07_alias.yaml
 t/pod-coverage.t
 t/pod.t
 Todo
