@@ -132,7 +132,9 @@ sub setup {
 
     if ( $config->{profiles} and ref $config->{profiles} ne 'HASH' ) {
         my $profiles = eval {
-            YAML::LoadFile( $config->{profiles} );
+            no warnings 'once';
+            $YAML::UseAliases = 0;
+            YAML::Load( YAML::Dump( YAML::LoadFile( $config->{profiles} ) ) ); # XXX: remove yaml aliases
         };
         Catalyst::Exception->throw( message => __PACKAGE__ . qq/: $@/ ) if $@;
 

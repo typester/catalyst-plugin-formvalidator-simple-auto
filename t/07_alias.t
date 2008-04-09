@@ -9,23 +9,13 @@ use warnings;
       FormValidator::Simple::Auto
       /;
 
-    use YAML;
-
-    my $conf = <<'_YAML_';
-action1:
-    param1: &param1
-        - rule: NOT_BLANK
-          message: blank
-
-action2:
-    param1: *param1
-
-_YAML_
+    use FindBin;
+    use File::Spec;
 
     __PACKAGE__->config(
         name => 'TestApp',
         validator => {
-            profiles => YAML::Load($conf),
+            profiles => File::Spec->catfile($FindBin::Bin, '07_alias.yaml'),
         },
     );
     __PACKAGE__->setup;
