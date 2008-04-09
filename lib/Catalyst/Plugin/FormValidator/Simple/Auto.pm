@@ -8,7 +8,7 @@ use UNIVERSAL::isa;
 use YAML;
 use FormValidator::Simple;
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 __PACKAGE__->mk_accessors(qw/validator_profile/);
 
@@ -133,7 +133,7 @@ sub setup {
     if ( $config->{profiles} and ref $config->{profiles} ne 'HASH' ) {
         my $profiles = eval {
             no warnings 'once';
-            $YAML::UseAliases = 0;
+            local $YAML::UseAliases = 0;
             YAML::Load( YAML::Dump( YAML::LoadFile( $config->{profiles} ) ) ); # XXX: remove yaml aliases
         };
         Catalyst::Exception->throw( message => __PACKAGE__ . qq/: $@/ ) if $@;
