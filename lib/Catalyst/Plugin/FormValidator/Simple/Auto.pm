@@ -9,7 +9,7 @@ use YAML;
 use FormValidator::Simple;
 use MRO::Compat;
 
-our $VERSION = '0.17';
+our $VERSION = '0.18';
 
 __PACKAGE__->mk_accessors(qw/validator_profile/);
 

@@ -29,6 +29,12 @@ t/05_form_messages.t
 t/06_nested_actions.t
 t/07_alias.t
 t/07_alias.yaml
+t/lib/TestApp02.pm
+t/lib/TestApp03.pm
+t/lib/TestApp04.pm
+t/lib/TestApp05.pm
+t/lib/TestApp06.pm
+t/lib/TestApp07.pm
 t/pod-coverage.t
 t/pod.t
 Todo

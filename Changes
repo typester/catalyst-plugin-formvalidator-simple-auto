@@ -1,5 +1,8 @@
 Revision history for Perl module Catalyst::Plugin::FormValidator::Simple::Auto
 
+0.18 2009-06-08T18:22:36+09:00
+     - support Catalyst 5.8 (Thanks to hidek)
+
 0.17 2008-04-09T18:57:31+09:00
      - use local when set $YAML::UseAliases
 

@@ -4,7 +4,7 @@ all_from 'lib/Catalyst/Plugin/FormValidator/Simple/Auto.pm';
 
 build_requires 'Test::More';
 
-requires 'Catalyst' => '5.30';
+requires 'Catalyst' => '5.80001';
 requires 'Catalyst::Plugin::FormValidator::Simple';
 requires 'FormValidator::Simple' => '0.20';
 requires 'UNIVERSAL::isa';

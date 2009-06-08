@@ -10,3 +10,6 @@
 \.gz$
 \.cvsignore
 ^9\d_.*\.t
+^\.shipit$
+^\.git/
+\.gitignore
