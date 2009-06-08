@@ -7,6 +7,7 @@ use Catalyst::Exception;
 use UNIVERSAL::isa;
 use YAML;
 use FormValidator::Simple;
+use MRO::Compat;
 
 our $VERSION = '0.17';
 
@@ -108,7 +109,7 @@ If the key isn't presented, return all messages as hash.
 
 sub form_messages {
     my ($c, $key) = @_;
-    my $messages = $c->form->field_messages( $c->validator_profile );
+    my $messages = $c->form->field_messages($c->validator_profile);
 
     $key ? $messages->{$key} : $messages;
 }
@@ -120,46 +121,53 @@ sub form_messages {
 =cut
 
 sub setup {
-    my $c = shift;
+    my $c      = shift;
     my $config = $c->config->{validator};
 
-    Catalyst::Exception->throw( message =>
-          __PACKAGE__ . qq/: You need to load "Catalyst::Plugin::FormValidator::Simple"/ )
-      unless $c->isa('Catalyst::Plugin::FormValidator::Simple');
+    Catalyst::Exception->throw(message => __PACKAGE__
+            . qq/: You need to load "Catalyst::Plugin::FormValidator::Simple"/
+    ) unless $c->isa('Catalyst::Plugin::FormValidator::Simple');
 
-    $c->log->warn( __PACKAGE__ . qq/: You must set validator profiles/ )
-      unless $config->{profiles};
+    $c->log->warn(__PACKAGE__ . qq/: You must set validator profiles/)
+        unless $config->{profiles};
 
-    if ( $config->{profiles} and ref $config->{profiles} ne 'HASH' ) {
+    if ($config->{profiles} and ref $config->{profiles} ne 'HASH') {
         my $profiles = eval {
             no warnings 'once';
             local $YAML::UseAliases = 0;
-            YAML::Load( YAML::Dump( YAML::LoadFile( $config->{profiles} ) ) ); # XXX: remove yaml aliases
+            YAML::Load(YAML::Dump(YAML::LoadFile($config->{profiles})))
+                ;    # XXX: remove yaml aliases
         };
-        Catalyst::Exception->throw( message => __PACKAGE__ . qq/: $@/ ) if $@;
+        Catalyst::Exception->throw(message => __PACKAGE__ . qq/: $@/) if $@;
 
         $config->{profiles} = $profiles;
     }
 
     my $messages;
     my $profiles = $config->{profiles};
-    for my $action ( keys %{ $profiles || {} } ) {
+    for my $action (keys %{$profiles || {}}) {
         my $profile = $profiles->{$action} || {};
 
-        for my $param ( keys %$profile ) {
+        for my $param (keys %$profile) {
             my $rules = $profile->{$param} || [];
 
             my $i = 0;
             for my $rule (@$rules) {
-                if ( ref $rule eq 'HASH' and defined $rule->{rule} ) {
-                    my $rule_name = ref $rule->{rule} eq 'ARRAY' ? $rule->{rule}[0] : $rule->{rule};
+                if (ref $rule eq 'HASH' and defined $rule->{rule}) {
+                    my $rule_name
+                        = ref $rule->{rule} eq 'ARRAY'
+                        ? $rule->{rule}[0]
+                        : $rule->{rule};
                     $messages->{$action}{$param} ||= {};
-                    $messages->{$action}{$param}{ $rule_name } = $rule->{message} if defined $rule->{message};
+                    $messages->{$action}{$param}{$rule_name}
+                        = $rule->{message}
+                        if defined $rule->{message};
                     $rule = $rule->{rule};
-                }
-                elsif (ref $rule eq 'HASH' and defined $rule->{self_rule} ) {
+                } elsif (ref $rule eq 'HASH' and defined $rule->{self_rule}) {
                     $messages->{$action}{$param} ||= {};
-                    $messages->{$action}{$param}{ $rule->{self_rule} } = $rule->{message} if defined $rule->{message};
+                    $messages->{$action}{$param}{$rule->{self_rule}}
+                        = $rule->{message}
+                        if defined $rule->{message};
                     delete $rules->[$i];
                 }
                 $i++;
@@ -170,14 +178,23 @@ sub setup {
     # XXX: replace messages. ponder about hash merging
     $config->{messages} = $messages if $messages;
 
+    $c->next::method(@_);
+}
+
+=head2 setup_finalize
+
+=cut
+
+sub setup_finalize {
+    my $c = shift;
+
     # fix plugin order
     {
         no strict 'refs';
         my $pkg = __PACKAGE__;
-        @{"$c\::ISA"} = ( $pkg, grep !/^$pkg$/, @{"$c\::ISA"} );
+        @{"$c\::ISA"} = ($pkg, grep !/^$pkg$/, @{"$c\::ISA"});
     }
-
-    $c->NEXT::setup(@_);
+    $c->next::method(@_);
 }
 
 =head2 prepare
@@ -185,14 +202,15 @@ sub setup {
 =cut
 
 sub prepare {
-    my $c = shift->NEXT::prepare(@_);
+    my $c = shift->next::method(@_);
 
-    if ( my $profile = $c->config->{validator}{profiles}{ $c->action->reverse } ) {
-        $c->validator_profile( $c->action->reverse );
+    if (my $profile = $c->config->{validator}{profiles}{$c->action->reverse})
+    {
+        $c->validator_profile($c->action->reverse);
         $c->form(%$profile);
     }
 
-    $c
+    $c;
 }
 
 =head2 forward
@@ -203,29 +221,26 @@ sub forward {
     my $c = shift;
     my $action = $c->dispatcher->_invoke_as_path($c, @_);
 
-    no warnings 'once';
-    local $NEXT::NEXT{ $c, 'forward' };
-
     my $res;
-    if ( my $profile = $c->config->{validator}{profiles}{ $action } ) {
+    if (my $profile = $c->config->{validator}{profiles}{$action}) {
+
         # first time validation
         if (not $c->validator_profile) {
             $c->{validator_profile} = $action;
 
             $c->form(%$profile);
-            $res = $c->NEXT::forward(@_);
-        }
-        else {
+            $res = $c->next::method(@_);
+        } else {
+
             # don't override validator stuffs when not first time validation
-            local $c->{validator} = FormValidator::Simple->new;
+            local $c->{validator}         = FormValidator::Simple->new;
             local $c->{validator_profile} = $action;
 
             $c->form(%$profile);
-            $res = $c->NEXT::forward(@_);
+            $res = $c->next::method(@_);
         }
-    }
-    else {
-        $res = $c->NEXT::forward(@_);
+    } else {
+        $res = $c->next::method(@_);
     }
 
     $res;
