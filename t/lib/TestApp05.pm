@@ -20,19 +20,5 @@ __PACKAGE__->config(
 );
 __PACKAGE__->setup;
 
-sub action1 : Global {
-    my ($self, $c) = @_;
-
-    if ($c->form->has_error) {
-        if (($c->req->params->{as} || '') eq 'hash') {
-            $c->res->body($c->form_messages->{param1}->[0]);
-        } else {
-            $c->res->body($c->form_messages('param1')->[0]);
-        }
-    } else {
-        $c->res->body('no errors');
-    }
-}
-
 1;
 

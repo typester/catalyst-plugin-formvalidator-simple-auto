@@ -15,15 +15,4 @@ __PACKAGE__->config(
 );
 __PACKAGE__->setup;
 
-sub action1 : Global {
-    my ($self, $c) = @_;
-
-    $c->res->body(@{$c->form_messages('param1')});
-}
-
-sub action2 : Global {
-    my ($self, $c) = @_;
-    $c->res->body(@{$c->form_messages('param1')});
-}
-
 1;
